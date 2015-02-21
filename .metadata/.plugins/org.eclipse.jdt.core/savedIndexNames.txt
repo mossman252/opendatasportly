@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+/Users/josephmoscatiello/Documents/adroid_app/opendata/code/.metadata/.plugins/org.eclipse.jdt.core
+2903576722.index
+4113206578.index
+2523896311.index
