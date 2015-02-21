@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical"
+    android:background="@drawable/rocker">
+
+    
+     <RelativeLayout
+        	android:layout_width="fill_parent"
+       	    android:layout_height="fill_parent"
+       		android:background="@color/translucent_black">
+    
+    		<!-- <ImageView
+        		android:id="@+id/app_logo"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:src="@drawable/cliptunes_logo"
+        		android:layout_centerInParent="true"/> -->
+        		
+        	<TextView
+        		android:id="@+id/app_text"
+        		android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:text="@string/app_name"
+        		android:textSize="72sp"
+        		android:textColor="@color/white"
+        		android:layout_centerInParent="true"
+        		android:gravity="center_horizontal"
+        		/>
+
+        	        
+        	<TextView
+            	android:id="@+id/skip_login_tv"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:textSize="@dimen/fonts_normal"
+            	android:text="@string/skip_login"
+           		android:textColor="@color/white"
+            	android:layout_centerHorizontal="true"
+            	android:layout_alignParentBottom="true"
+            	android:layout_marginBottom="50dp"/>
+        	
+        	
+        	<com.facebook.widget.LoginButton
+           		android:id="@+id/authButton"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_marginBottom="50dp"
+            	android:layout_marginTop="50dp"
+            	android:layout_centerHorizontal="true" 
+            	android:layout_above="@id/skip_login_tv" />
+        
+        	<TextView
+            	android:id="@+id/user_name"
+            	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:textSize="@dimen/fonts_small"
+            	android:layout_marginBottom="30dp"
+            	android:visibility="gone"/>
+        	
+        
+    </RelativeLayout>
+    
+</RelativeLayout>

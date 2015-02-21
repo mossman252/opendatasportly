@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white" >
+    
+    <!--  Map  -->
+    <LinearLayout 
+        android:id="@+id/topmap"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25"
+        android:orientation="vertical"
+        android:gravity="center">
+        
+    </LinearLayout>
+    
+    <!--  Address under map -->
+    <LinearLayout 
+        android:id="@+id/map_address_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/border_bottom_gray">
+        
+        <TextView
+                android:id="@+id/map_address_tv"
+                android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:gravity="center"
+        		android:textSize="@dimen/fonts_small"
+        		android:textColor="@color/nobel_gray"
+        		android:padding="5dp">
+        </TextView>
+        
+    </LinearLayout>
+    
+    
+    <LinearLayout
+       android:layout_width="fill_parent"
+       android:layout_height="0dp"
+       android:layout_weight="0.55"
+       android:orientation="horizontal"
+       android:padding="5dp"
+       android:baselineAligned="false">
+        
+       <LinearLayout
+        	android:layout_width="0dp"
+       		android:layout_height="wrap_content"
+       		android:layout_weight="0.5"
+       		android:orientation="vertical"
+        	android:padding="5dp"
+        	android:layout_gravity="center_horizontal" 
+        	android:gravity="center_horizontal">
+        	
+            <ImageView 
+                android:id="@+id/vendor_image"
+                android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:background="@color/white"
+        	    android:maxHeight="200sp"
+        	    android:maxWidth="200sp"
+        	    />
+            
+       </LinearLayout>
+       
+       <!--  facebook people -->
+    	<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:gravity="center"
+        	android:orientation="vertical"
+        	android:background="@drawable/border_solid_lines"
+        	android:paddingTop="5dp" >
+            
+    	    <TextView
+    	        android:id="@+id/adress"
+    	        android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:textSize="@dimen/fonts_normal">
+    	        
+    	    </TextView>
+    
+    	</LinearLayout>
+
+       
+       <LinearLayout
+        	android:layout_width="0dp"
+       		android:layout_height="fill_parent"
+       		android:layout_weight="0.5"
+       		android:orientation="vertical"
+        	android:paddingLeft="5dp"
+        	android:paddingRight="5dp" >
+            
+           		<!-- Business name title -->
+       	 		<TextView
+         	    	android:id="@+id/business_name_title"
+         	    	android:text="@string/business_name"
+         	    	style="@style/vendor_details_title_descriptor"/>
+         
+            	 	<!--  Business TextView changing -->
+         		<TextView
+            		 android:id="@+id/business_name_tv"
+            		 style="@style/vendor_details_textview_info"
+            		 android:text="Business Name"/>
+        
+            	<!--  Category -->
+         		<TextView
+            		 android:id="@+id/category_title"
+            		 android:text="Category:"
+            		 style="@style/vendor_details_title_descriptor"/>
+         
+            	<!--  Category changing -->
+          		<TextView
+            		 android:id="@+id/owner_name_tv"
+            		 style="@style/vendor_details_textview_info"/>
+          	
+          		 <!--  Website title -->
+         		<TextView
+            		 android:id="@+id/website_title"
+            		 android:text="Website:"
+            		 style="@style/vendor_details_title_descriptor"/>
+         
+            	<!--  Website textview changing -->
+          		<TextView
+            		 android:id="@+id/website_tv"
+            		 style="@style/vendor_details_textview_info"/>
+          	
+       </LinearLayout>
+       
+    </LinearLayout>
+    
+    <!--  facebook people -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/border_solid_lines"
+        android:paddingTop="5dp" >
+    
+    </LinearLayout>
+
+</LinearLayout>

@@ -16,5 +16,22 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+     <!-- For the titles to the textviews -->
+    <style name="vendor_details_title_descriptor">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/fonts_small</item>
+        <item name="android:textColor">@color/app_red</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+    
+    <style name="vendor_details_textview_info">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/fonts_small</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
 </resources>

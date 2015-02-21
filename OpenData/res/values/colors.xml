@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="app_red">#eb1c23</color>
+    <color name="black">#000000</color>
+    <color name="translucent_black">#80000000</color>
+    <color name="white">#ffffff</color>
+     <color name="offwhite">#f8f8f8</color>
+     <color name="lite_gray">#ededed</color>
+
+    <color name="nobel_gray">#999999</color>
+    <color name="dim_gray">#666666</color>
+    <color name="gray">#8f8f8f</color>
+
+    <color name="lightning_yellow">#f5a62f</color>
+    <color name="pumpkin">#f88017</color>
+    <color name="neon_carrot">#ffa233</color>
+    
+    <color name="cosmic_latte">#dcfaeb</color>
+
+    <color name="dodger_blue">#3ebdff</color>
+    <color name="denim_blue">#1473A6</color>
+    <color name="columbia_blue">#95DAFF</color>
+    
+    <color name="transparent_danube_blue">#775399bf</color>
+    <color name="subblack">#242424</color>
+    
+     <color name="title_color">#005d96</color>
+     <color name="selector_yellow">#cfc097</color>
+    
+</resources>

@@ -1,5 +1,12 @@
 <resources>
 
-    <string name="app_name">OpenData</string>
+    <string name="app_name">Sportly</string>
+    <string name="skip_login">Skip Login</string>
 
+    
+     <!--  FB -->
+    <string name="app_id">750691478372024</string>
+    
+    
+    <string name="business_name">Business Name</string>
 </resources>

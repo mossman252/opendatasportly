@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <dimen name="fonts_small"> 20sp</dimen>
+     <dimen name="fonts_normal"> 24sp</dimen>
+     <dimen name="fonts_large"> 30sp</dimen>
+     <dimen name="fonts_xlarge"> 31sp</dimen>
+     
+     <dimen name="tab_font_size">18sp</dimen>
+     <dimen name="home_screen_margintop"> 40dp</dimen>
+     <dimen name="home_screen_textpadding"> 35dp</dimen>
+</resources>
