@@ -16,7 +16,6 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,15 +35,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.team.actor.Location;
+import com.team.opendata.LocationActivity;
+import com.team.opendata.R;
 
 public class LocationMapFragment extends Fragment implements OnMapLongClickListener, OnInfoWindowClickListener{
 	private MapFragment fragment;
 	private GoogleMap map;
 	
 	static final LatLng Toronto = new LatLng(43.65, -79.38);
-    private ArrayList<Location> locList;
     
     private String mFilter;
+	private ArrayList<com.team.actor.Location> mLocList;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,20 +67,23 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 		getActivity().setProgressBarIndeterminateVisibility(true);
 		((LocationActivity) getActivity()).setTitle("Map");
 		
-	    //initialize vendorList
-        locList = new ArrayList<Location>();
-        
         mFilter = ((LocationActivity)getActivity()).getFilter();
         
-        DownloadJSON task = new DownloadJSON();
-        String url;
-        if(null != mFilter) {
-        	url = "http://pursefitness.com/opendata/get_locations.php?category=" + mFilter; 
-        } else {
-        	url = "http://pursefitness.com/opendata/get_locations.php";
-        }
-        		
-	    task.execute(new String[] { url });
+        if(((LocationActivity)getActivity()).getLocList() != null) {
+			mLocList = ((LocationActivity)getActivity()).getLocList();
+			addMarker();
+
+		} else {
+	        DownloadJSON task = new DownloadJSON();
+	        String url;
+	        if(null != mFilter) {
+	        	url = "http://pursefitness.com/opendata/get_locations.php?category=" + mFilter; 
+	        } else {
+	        	url = "http://pursefitness.com/opendata/get_locations.php";
+	        }
+	        		
+		    task.execute(new String[] { url });
+		}
 	    
 	}
 
@@ -112,9 +117,10 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 				//put result into json array and parse
 				JSONArray jsonArray = new JSONArray(result);
 				JSONObject json_data = null;
+				mLocList = new ArrayList<Location>();
 				for (int i=0; i < jsonArray.length()-1; i++) {
 					   json_data = jsonArray.getJSONObject(i);
-						locList.add(new Location(json_data.getInt("location_id"), 
+					   mLocList.add(new Location(json_data.getInt("location_id"), 
 								json_data.getString("CATEGORY"), 
 								json_data.getString("UNIT"),
 								json_data.getString("STR_ADDR"),
@@ -132,7 +138,8 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			finally{
+			finally {
+				((LocationActivity)getActivity()).setLocList(mLocList);
 				addMarker();
 			}
 			
@@ -144,14 +151,14 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
     	while(map == null){}
     	configureMap(map);
     	
-    	for(int i = 0; i < locList.size(); i++)
+    	for(int i = 0; i < mLocList.size(); i++)
 		{
 			 Marker marker = map.addMarker(new MarkerOptions()
-      			.position(new LatLng(locList.get(i).getLat(), locList.get(i).getLongi())));
+      			.position(new LatLng(mLocList.get(i).getLat(), mLocList.get(i).getLongi())));
       			
       				//marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_dog_stand));
-      				marker.setTitle(" " + locList.get(i).getName());
-      				marker.setSnippet("Address: " + locList.get(i).getAddress());
+      				marker.setTitle(mLocList.get(i).getName());
+      				marker.setSnippet("Address: " + mLocList.get(i).getAddress());
       				marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
 		}
     	

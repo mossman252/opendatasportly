@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.team.actor.Location;
+import com.team.fragment.LocationListFragment;
+import com.team.fragment.LocationMapFragment;
 
 import android.app.Activity;
 import android.app.ActionBar;
