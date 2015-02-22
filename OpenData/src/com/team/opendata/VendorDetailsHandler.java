@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.team.common.Constants;
 import com.team.fragment.CommentsFragment;
+import com.team.fragment.ShowEvents;
 import com.team.fragment.VendorInfoFragment;
 
 import android.app.Fragment;
@@ -17,6 +18,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.Html;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Bundle;
 
 
@@ -42,6 +44,11 @@ public class VendorDetailsHandler extends FragmentActivity{
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
         	locationId = extras.getString("LOCATION_ID");
+        }
+        
+        if(extras.getBoolean("isnfc")) {
+        	Toast.makeText(VendorDetailsHandler.this,"You Just Checked In !!", 
+					Toast.LENGTH_LONG).show();
         }
         
         //get shared pref
@@ -85,6 +92,9 @@ public class VendorDetailsHandler extends FragmentActivity{
 			case 1:  CommentsFragment g = new CommentsFragment();
 				     g.setArguments(bundle_args);
 			         return g;
+			case 2:  ShowEvents j = new ShowEvents();
+		     			j.setArguments(bundle_args);
+		     			return j;
 			default: VendorInfoFragment h = new VendorInfoFragment();
 	        		 h.setArguments(bundle_args);
 	        		 return h;
@@ -94,7 +104,7 @@ public class VendorDetailsHandler extends FragmentActivity{
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return 2;
+			return 3;
 		}
 	}
     

@@ -278,6 +278,8 @@ public class VendorInfoFragment extends Fragment{
 	//update all the fields once the vendor returns from a poo
 	public void updateVendorFields()
 	{
+		
+		if(loc != null) {
 			//set the address of the vendor
 			mapAddress.setText(loc.getAddress() + ", " + loc.getPostalCode());
 		
@@ -304,6 +306,7 @@ public class VendorInfoFragment extends Fragment{
 		  	map.setMyLocationEnabled(true);
 		  	
 		  	getActivity().setProgressBarIndeterminateVisibility(false);
+		}
 	}
 	
 	@Override

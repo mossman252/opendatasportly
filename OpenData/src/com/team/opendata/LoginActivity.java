@@ -102,6 +102,7 @@ public class LoginActivity extends Activity{
        
         skipLogin.setOnClickListener(new OnClickListener() {
   			public void onClick(View v) {
+  				//System.out.println("User id " + userInfoPref.getInt(Constants.SETTING_VENDORID_INFO, 0));
 
   					startActivity(new Intent(LoginActivity.this, ItemListActivity.class));
   	  				overridePendingTransition(R.anim.translate_left_offscreen, R.anim.translate_right_onscreen);

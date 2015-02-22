@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="62dp"
+        android:layout_height="43dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/event" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/rowTitle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:gravity="center"
+            android:text="my_Title"
+            android:textColor="#000000"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/rowDesc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:text="my description"
+                android:textColor="#BBBBFF"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/rowTime"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="0:00"
+                android:textColor="#000000" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

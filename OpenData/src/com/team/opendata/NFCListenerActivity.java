@@ -80,7 +80,7 @@ public class NFCListenerActivity extends Activity {
 	 */
 	private boolean writeTag(Tag tag) {
 		// record to launch Play Store if app is not installed
-		NdefRecord appRecord = NdefRecord.createApplicationRecord("com.rm.lambtonconnect");
+		NdefRecord appRecord = NdefRecord.createApplicationRecord("com.team.opendata");
 		
 		// record that contains our custom "retro console" game data, using custom MIME_TYPE
 		byte[] payload = String.valueOf(mLocationId).getBytes();

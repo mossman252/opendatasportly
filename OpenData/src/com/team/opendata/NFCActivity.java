@@ -28,9 +28,10 @@ public class NFCActivity extends Activity {
             
             Log.i("", "locationId" + locationId);
             
-//            Intent activityIntent = new Intent(NFCActivity.this, ProfileActivity.class);
-//            activityIntent.putExtra(Constants.LOCATION_ID, Integer.valueOf(locationId));
-//            startActivity(activityIntent);
+            Intent activityIntent = new Intent(NFCActivity.this, VendorDetailsHandler.class);
+            activityIntent.putExtra(Constants.LOCATION_ID, Integer.valueOf(locationId));
+            activityIntent.putExtra("isnfc", true);
+            startActivity(activityIntent);
             
             finish();
             

@@ -132,7 +132,7 @@ public class WriteTagActivity extends Activity {
 			public void onClick(View v) {
 				if(!TextUtils.isEmpty(mLocationEditText.getText())) {
 					Intent intent = new Intent(WriteTagActivity.this, NFCListenerActivity.class);
-					intent.putExtra(com.team.common.Constants.LOCATION_ID, mLocationEditText.getText());
+					intent.putExtra(com.team.common.Constants.LOCATION_ID, mLocationEditText.getText().toString());
 					startActivity(intent);
 					finish();
 				} else {
