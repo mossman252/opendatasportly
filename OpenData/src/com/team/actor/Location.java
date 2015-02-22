@@ -14,6 +14,7 @@ public class Location {
 	private Double longi;
 	private String website;
 	private String type; 
+	private float distance;
 
 	public Location(int locationId, String category, String unit, String address, String city,
 			String postalCode, String phone, String name,  Double lat, Double longi, String website, String type)
@@ -129,5 +130,12 @@ public class Location {
 		this.type = type;
 	}
 
-	
+	public float getDistance() {
+		return distance;
+	}
+
+	public void setDistance(float distance) {
+		this.distance = distance;
+	}
+
 }
