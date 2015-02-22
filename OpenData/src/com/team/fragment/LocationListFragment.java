@@ -101,11 +101,11 @@ public class LocationListFragment extends Fragment {
         
         list.setOnItemClickListener(new OnItemClickListener() {
     	    public void onItemClick(AdapterView<?> arg0, View v, int position, long id) { 
-//    	    	        Intent intent = new Intent(getActivity().getApplicationContext(), VendorDetailsHandler.class);
-//    					intent.putExtra("VENDOR_ID",v.getTag().toString());
-//    					startActivity(intent);
-//    					getActivity().overridePendingTransition(R.anim.translate_left_offscreen, R.anim.translate_right_onscreen);
-    			}
+    	    	Intent intent = new Intent(getActivity().getApplicationContext(), VendorDetailsHandler.class);
+    			intent.putExtra("LOCATION_ID", v.getTag().toString());
+    			startActivity(intent);
+    			getActivity().overridePendingTransition(R.anim.translate_left_offscreen, R.anim.translate_right_onscreen);
+    	    }
         });
 	    //stop the progress bar
 	    getActivity().setProgressBarIndeterminateVisibility(false);
