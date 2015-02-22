@@ -1,20 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Sportly</string>
     <string name="skip_login">Skip Login</string>
 
-    
-     <!--  FB -->
+    <!-- FB -->
     <string name="app_id">750691478372024</string>
-    
-    
     <string name="business_name">Business Name</string>
-    
     <string name="title_item_detail">Item Detail</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="title_section1">Map</string>
     <string name="title_section2">List</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_write_tag">Write NFC Tag</string>
+    <string name="title_activity_nfc">NFCActivity</string>
+    <string name="title_activity_write_tag">WriteTagActivity</string>
+    <string name="dummy_button">Write Tag</string>
+    <string name="dummy_content">Would you like to write a Tag \n for your Event ?</string>
+    <string name="title_activity_nfclistener">NFCListenerActivity</string>
+    <string name="tap_tag">Hold the tag \nagainst the device \nto write .. </string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    
+    <string name="error_rating_title">Please enter a title</string>
+    <string name="posting_comment">Posting Comment</string>
+    <string name="title_activity_tabbed_location_details">TabbedLocationDetails</string>
 
 </resources>

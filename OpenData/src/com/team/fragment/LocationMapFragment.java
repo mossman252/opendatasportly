@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.team.actor.Location;
 import com.team.opendata.LocationActivity;
 import com.team.opendata.R;
+import com.team.opendata.VendorDetailsHandler;
 
 public class LocationMapFragment extends Fragment implements OnMapLongClickListener, OnInfoWindowClickListener{
 	private MapFragment fragment;
@@ -196,7 +197,7 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 	
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		Intent intent = new Intent(getActivity().getApplicationContext(), VendorDetailsHandler.class);
+		Intent intent = new Intent(getActivity(), VendorDetailsHandler.class);
 		String[] words = marker.getTitle().split(" ");
 		intent.putExtra("LOCATION_ID", words[0]);
 		startActivity(intent);

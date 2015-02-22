@@ -12,12 +12,14 @@ public class Comment {
 	private int userId;
 	
 	
-	public Comment(int commentId, String stringComment, int userId, String timestamp)
+	public Comment(int commentId, String stringComment, int userId, String username, String userFbId, String timestamp)
 	{
 		this.stringComment = stringComment;
 		this.commentId = commentId;
 		this.timestamp = timestamp;
+		this.username = username;
 		this.userId = userId;
+		this.userFbId = userFbId;
 	}
 	
 	public String getUserFbId() {

@@ -1,11 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.team.opendata.LocationActivity" >
-
+    
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_write_tag"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/action_write_tag"/>
+    
+     <item
+        android:id="@+id/action_view_profile"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="View Profile"/>
+    
 
 </menu>

@@ -21,6 +21,7 @@ import com.team.opendata.LocationActivity;
 import com.team.opendata.R;
 import com.team.opendata.R.id;
 import com.team.opendata.R.layout;
+import com.team.opendata.VendorDetailsHandler;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -101,7 +102,7 @@ public class LocationListFragment extends Fragment {
         
         list.setOnItemClickListener(new OnItemClickListener() {
     	    public void onItemClick(AdapterView<?> arg0, View v, int position, long id) { 
-    	    	Intent intent = new Intent(getActivity().getApplicationContext(), VendorDetailsHandler.class);
+    	    	Intent intent = new Intent(getActivity(), VendorDetailsHandler.class);
     			intent.putExtra("LOCATION_ID", v.getTag().toString());
     			startActivity(intent);
     			getActivity().overridePendingTransition(R.anim.translate_left_offscreen, R.anim.translate_right_onscreen);

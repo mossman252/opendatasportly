@@ -1,6 +1,7 @@
 package com.team.fragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,58 +14,70 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.team.common.Constants;
+import com.team.opendata.R;
 import com.team.actor.Location;
+import com.team.actor.User;
 
 public class VendorInfoFragment extends Fragment{
 
-	Location location;
+	Location loc;
 	String vendorID;
 	private MapFragment fragment;
 	private GoogleMap map;
 	
 	private DisplayImageOptions options;
+	ArrayList<User> users;
+	
+	LinearLayout layoutPeople;
 	
 	//TextViews
-	private TextView oNameTV; //owner name
-	private TextView oNameTitle;
+	private TextView businessNameTV; //owner name
+	private TextView businessNameTitle;
 	private TextView websiteTitle;
 	private TextView websiteTV;
-	private TextView websiteTtitle; 
 	private TextView bNameTitle;
 	private TextView categoryTV; //owner name
 	private TextView categoryTitle;
 	private TextView mapAddress;
-	private TextView vendorRatingTxt;
+	
 	private ImageView vendorImage;
 	private Typeface typeface_reg;
 	
-	private RatingBar vendorRating;
 	private int userId;
+	private ImageLoader imageLoader;
 	
-	@Override
+	@SuppressLint("NewApi") @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		//set the view for the fragment
@@ -72,23 +85,21 @@ public class VendorInfoFragment extends Fragment{
         getActivity().setProgressBarIndeterminateVisibility(true);
         
         //intantiate items
-        bNameTV = (TextView) view.findViewById(R.id.business_name_tv);
-        bNameTitle = (TextView) view.findViewById(R.id.business_name_title);
-        oNameTV = (TextView) view.findViewById(R.id.owner_name_tv);
-        oNameTitle = (TextView) view.findViewById(R.id.owner_title);
+        businessNameTV = (TextView) view.findViewById(R.id.business_name_tv);
+        businessNameTitle = (TextView) view.findViewById(R.id.business_name_title);
         websiteTV = (TextView) view.findViewById(R.id.website_tv);
         websiteTitle = (TextView) view.findViewById(R.id.website_title);
         categoryTitle = (TextView) view.findViewById(R.id.category_title);
-        categoryTV = (TextView) view.findViewById(R.id.license_num_tv);
+        categoryTV = (TextView) view.findViewById(R.id.category_tv);
         mapAddress = (TextView) view.findViewById(R.id.map_address_tv);
-        vendorRatingTxt = (TextView) view.findViewById(R.id.vendor_rating_text);
+        layoutPeople =(LinearLayout) view.findViewById(R.id.layout_people);
         typeface_reg = Typeface.createFromAsset(getActivity().getAssets(), Constants.HERO_BOLD); 
-
+        users = new ArrayList<User>();
+        
         //font declaration
-        bNameTitle.setTypeface(typeface_reg);
-        oNameTitle.setTypeface(typeface_reg);
+        businessNameTitle.setTypeface(typeface_reg);
+        categoryTitle.setTypeface(typeface_reg);
         websiteTitle.setTypeface(typeface_reg);
-        licenseTitle.setTypeface(typeface_reg);
         
         //image options
         options = new DisplayImageOptions.Builder()
@@ -99,9 +110,12 @@ public class VendorInfoFragment extends Fragment{
         .showImageOnFail(R.drawable.icon_noimage) 
 		.build();
         
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(this.getActivity()));
+        
         //produce map
         FragmentManager fm = getChildFragmentManager();
-        fragment = (MapFragment) fm.findFragmentById(R.id.map);
+        fragment = (MapFragment) fm.findFragmentById(R.id.topmap);
         if (fragment == null) {
             fragment = MapFragment.newInstance();
             fm.beginTransaction().replace(R.id.topmap, fragment).commit();
@@ -109,7 +123,7 @@ public class VendorInfoFragment extends Fragment{
         
         Bundle extras = getArguments();
     	if (extras != null) {
-    		vendorID = extras.getString("VENDOR_ID");
+    		vendorID = extras.getString("LOCATION_ID");
     		userId = extras.getInt("USER_ID");
     	}
         
@@ -117,10 +131,14 @@ public class VendorInfoFragment extends Fragment{
         DownloadJSON task = new DownloadJSON();
 	    task.execute(new String[] { "http://pursefitness.com/opendata/get_location_details.php?location_id=" + vendorID  });
 
+	    DownloadUsersForLocation userTask = new DownloadUsersForLocation();
+	    userTask.execute(new String[] { "http://pursefitness.com/opendata/get_user_bylocation.php?location_id=1" + vendorID  });
+	    
+	    
         return view;
 	}
 	
-	
+	//this is done for location
 	public class DownloadJSON extends AsyncTask<String, Void, String> {
     	//download the vendor list from the server
 		String json = "";
@@ -148,11 +166,25 @@ public class VendorInfoFragment extends Fragment{
 		protected void onPostExecute(String result) {
 			
 			try {
-				//put result into json array and parse
-				
 				JSONArray jsonArray = new JSONArray(result);
-				JSONObject json_data = null;
 				
+				JSONObject json_data = null;
+				for (int i=jsonArray.length()-1; i >= 0; i--) {
+					    json_data = jsonArray.getJSONObject(i);
+					    System.out.println(json_data);
+						loc = new Location(json_data.getInt("location_id"), 
+								json_data.getString("CATEGORY"), 
+								json_data.getString("UNIT"),
+								json_data.getString("STR_ADDR"),
+								json_data.getString("MUN"), 
+								json_data.getString("POSTAL"),
+								json_data.getString("PHONE"), 
+								json_data.getString("LM_NAME"), 
+								json_data.getDouble("LATITUDE"), 
+								json_data.getDouble("LONGITUDE"), 
+								json_data.getString("WEBSITE"), 
+								json_data.getString("LM_TYPE")); 
+				}
 			
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -167,68 +199,104 @@ public class VendorInfoFragment extends Fragment{
 		
 	}
 	
+	
+	
+	//this is done for location
+		public class DownloadUsersForLocation extends AsyncTask<String, Void, String> {
+	    	//download the vendor list from the server
+			String json = "";
+			@Override
+			protected String doInBackground(String... urls) {
+				try {
+					HttpClient httpclient = new DefaultHttpClient();
+					HttpPost httppost = new HttpPost(urls[0]);
+					HttpResponse response = httpclient.execute(httppost);
+					HttpEntity entity = response.getEntity();
+			     
+					if (entity != null) {
+						json = EntityUtils.toString(entity);
+					}	
+				} catch (ClientProtocolException e) {
+					Log.e("Error", e.getMessage());
+				} catch (IOException e) {
+					Log.e("Error", e.getMessage());
+				}
+				return json;
+			}
+		
+			//run when the data is pulled online
+			@Override
+			protected void onPostExecute(String result) {
+				
+				try {
+					JSONArray jsonArray = new JSONArray(result);
+
+					for(int i = 0; i < jsonArray.length(); i++)
+					{
+						JSONObject json_data = null;
+						json_data = jsonArray.getJSONObject(i);
+						users.add(new User(json_data.getString("user_id"), json_data.getString("fb_id")));
+					}
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				finally{
+					//update vendor info
+					addUserImagesToUI();
+				}
+				
+			}
+			
+		}
+		
+	public void addUserImagesToUI()
+	{
+		
+		TableLayout.LayoutParams profilePicParams = new TableLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		profilePicParams.gravity = Gravity.TOP;
+		
+		for(int i = 0; i<users.size(); i++)
+		{
+			
+			ImageView profilePic = new ImageView(getActivity().getApplicationContext());
+			profilePic.setLayoutParams(profilePicParams);
+			profilePic.setPadding(10, 10, 10, 10);
+			ImageLoader.getInstance().displayImage("http://graph.facebook.com/"+ users.get(i).getFbId() + "/picture?type=large", profilePic, options);
+		    
+			/*profilePic.setOnClickListener(new Button.OnClickListener() {
+				Intent in = new Intent(getActivity().class. ProfilePic.class);
+				in.setArguments("", users.get(i).getUserId);
+				startActivity(in);
+			});*/
+			layoutPeople.addView(profilePic);
+		}
+		
+	}
+	
 	//update all the fields once the vendor returns from a poo
 	public void updateVendorFields()
 	{
 			//set the address of the vendor
-			mapAddress.setText(vendor.getAddress() + ", " + vendor.getPostalCode());
-			
-			if(vendor.getHotdogScore() == 0) //no one has rated the vendor yet
-			{
-				vendorRatingTxt.setVisibility(View.VISIBLE);
-				vendorRating.setRating(0);
-			}
-			else
-			{
-				vendorRatingTxt.setVisibility(View.VISIBLE);
-				vendorRatingTxt.setText("Rated: " + (int) vendor.getHotdogScore() + " / 5" );
-				vendorRating.setRating((int) vendor.getHotdogScore());
-			}
-			
-			//if the user favoireted this vendor populate the star
-			if(vendor.getFavorited() > 0)
-			{
-			   	((VendorDetailsHandler) getActivity()).activateFavoriteStar();
-			}
-			
-			//show business views if the business name is specified
-			if(vendor.getBusinessName().length() > 3)
-			{
-				bNameTV.setText(Constants.capitalizeFirst(vendor.getBusinessName()));
-				bNameTV.setVisibility(View.VISIBLE);
-				bNameTitle.setVisibility(View.VISIBLE);
-			}
+			mapAddress.setText(loc.getAddress() + ", " + loc.getPostalCode());
+		
+			businessNameTV.setText(Constants.capitalizeFirst(loc.getName()));
 			
 			//if the vendor doesnt specify the name dont show it
-			if(vendor.getVendorName().length() > 3 && vendor.getVendorName().contains("."))
+			if(loc.getCategory().length() > 3)
 			{
-				String[] ownerSplit = vendor.getVendorName().split("[.]");
-			    oNameTV.setText(ownerSplit[1].substring(1, 2) + ". " + Constants.capitalizeFirst(ownerSplit[0]));  
-				oNameTV.setVisibility(View.VISIBLE);
-				oNameTitle.setVisibility(View.VISIBLE);
+			    categoryTV.setText(loc.getCategory());  
 			}
 		
 			//if the vendor doesnt specify the name dont show it
-			if(vendor.getOffer().length() > 3)
+			if(loc.getWebsite().length() > 3)
 			{
-				offerTV.setText(Constants.capitalizeFirst(vendor.getOffer().substring(0, vendor.getOffer().length()-1).replace(";", ", ")));
-				offerTV.setVisibility(View.VISIBLE);
-				offerTitle.setVisibility(View.VISIBLE);
+				websiteTV.setText(loc.getWebsite());
 			}
 			
-			//update license of vendor if it is set
-			if(vendor.getLicence().length() > 3)
-			{
-				licenseNumTV.setText(vendor.getLicence());
-				licenseNumTV.setVisibility(View.VISIBLE);
-				licenseTitle.setVisibility(View.VISIBLE);
-			}
 			
-			vendorImage.getLayoutParams().height = 200;
-			vendorImage.getLayoutParams().width = 200;
-			ImageLoader.getInstance().displayImage("http://www.pursefitness.com/hotdog_app/images/"+ vendor.getVendorId() + "/logo.png", vendorImage, options);
-			
-			LatLng vendorLoc = new LatLng(vendor.getLat(), vendor.getLongi());
+			LatLng vendorLoc = new LatLng(loc.getLat(), loc.getLongi());
 			CameraPosition cameraPosition = new CameraPosition.Builder().target(vendorLoc).zoom(15).build();
 		  	map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 		  	map.addMarker(new MarkerOptions()

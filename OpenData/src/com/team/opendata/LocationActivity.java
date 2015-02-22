@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import com.team.actor.Location;
+import com.team.common.Constants;
 import com.team.fragment.LocationListFragment;
 import com.team.fragment.LocationMapFragment;
 
@@ -13,6 +14,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -129,7 +131,20 @@ public class LocationActivity extends Activity implements ActionBar.TabListener 
             NavUtils.navigateUpTo(this, new Intent(this, ItemListActivity.class));
             return true;
         }
-		if (id == R.id.action_settings) {
+		
+		if (id == R.id.action_write_tag) {
+			Intent intent = new Intent(LocationActivity.this, WriteTagActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		
+		if (id == R.id.action_view_profile) {
+			//get shared pref
+	        SharedPreferences userInfoPref = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
+			
+//			Intent intent = new Intent(LocationActivity.this, ProfileActivity.class);
+//			intent.putExtra(Constants.USER_ID, userInfoPref.getInt(Constants.USER_ID, 0));
+//			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

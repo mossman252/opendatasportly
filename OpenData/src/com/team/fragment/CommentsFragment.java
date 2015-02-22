@@ -13,7 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -36,17 +36,19 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.team.common.Constants;
 import com.team.opendata.R;
+import com.team.opendata.VendorDetailsHandler;
 import com.team.actor.Comment;
 
-public class CommentsFragment extends Fragment{
+public class CommentsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
 	private Button postRatingBtn;
 	private TextView noRatingsTV;
 	private ArrayList<Comment> vendorRatingList;
-	private String locationID;
+	private String locationId;
 	
 	private LinearLayout vendorListLayout;
 	private View view;
@@ -57,15 +59,19 @@ public class CommentsFragment extends Fragment{
 	private DisplayMetrics dm;
 	private int screenWidth;
 	
+	int userId;
+	protected ImageLoader imageLoader;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 	     	 view = inflater
-					.inflate(R.layout.list_screen_ratings, container, false);
+					.inflate(R.layout.list_screen_comments, container, false);
 	     	 
 	     	 Bundle extras = getArguments();
 	    	 if (extras != null) {
-	    		locationID = extras.getString("LOCATION_ID");
+	    		locationId = extras.getString("LOCATION_ID");
+	    		userId = extras.getInt("USER_ID");
 	    	 }
 	     	 
 	    	 vendorRatingList = new ArrayList<Comment>();
@@ -89,7 +95,10 @@ public class CommentsFragment extends Fragment{
 	         .showImageOnFail(R.drawable.icon_noimage) 
 	         .imageScaleType(ImageScaleType.NONE)
 	 		 .build();
-	     	 
+	         
+	         imageLoader = ImageLoader.getInstance();
+	         imageLoader.init(ImageLoaderConfiguration.createDefault(this.getActivity()));
+	         
 	     	 this.attachListeners();
 	     	 return view;
 	}
@@ -99,7 +108,7 @@ public class CommentsFragment extends Fragment{
 		postRatingBtn.setOnClickListener(new Button.OnClickListener() {
 		    public void onClick(View v) {
 		    	//if user is logged in take them to the rating page
-		    	//((VendorDetailsHandler) getActivity()).promptFacebookLogin();
+		    	((VendorDetailsHandler) getActivity()).promptFacebookLogin();
 	    }});
 	}
 	
@@ -136,7 +145,7 @@ public class CommentsFragment extends Fragment{
 				JSONObject json_data = null;
 				for (int i=0; i < jsonArray.length(); i++) {
 					   json_data = jsonArray.getJSONObject(i);
-					   vendorRatingList.add(new Comment(json_data.getInt("comment_id") ,json_data.getString("text_comment"), json_data.getInt("user_id"), json_data.getString("time_sent")));
+					   vendorRatingList.add(new Comment(json_data.getInt("comment_id") ,json_data.getString("text_comment"), json_data.getInt("user_id"), json_data.getString("fb_username"), json_data.getString("fb_id"), json_data.getString("time_sent")));
 				}
 			
 			} catch (JSONException e) {
@@ -182,25 +191,25 @@ public class CommentsFragment extends Fragment{
 						ImageView profilePic = new ImageView(getActivity().getApplicationContext());
 						profilePic.setLayoutParams(profilePicParams);
 						profilePic.setPadding(0, 0, 10, 0);
-						ImageLoader.getInstance().displayImage("http://graph.facebook.com/"+ vendorRatingList.get(i).getUserFbId() + "/picture?type=normal", profilePic, options);
+						imageLoader.displayImage("http://graph.facebook.com/"+ vendorRatingList.get(i).getUserFbId() + "/picture?type=large", profilePic, options);
 						
-			            
 			            TextView ratingDate = new TextView(getActivity().getApplicationContext());
 			            ratingDate.setText(timeSplit[0]);
 			            ratingDate.setTextColor(Color.GRAY);
+			            ratingDate.setPadding(0,0,0,5);
 			            ratingDate.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
 			            
 			            // Create TextView for comment
 			            TextView ratingComment = new TextView(getActivity().getApplicationContext());
 			            ratingComment.setText(Constants.capitalizeFirstLeaveRest(vendorRatingList.get(i).getStringComment()));
 			            ratingComment.setTextColor(Color.BLACK);
-			            ratingComment.setPadding(0,0,0, 20);
+			            ratingComment.setPadding(0,0,0,5);
 			            ratingComment.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
 			            
 			            // Create TextView for comment
 			            TextView postedbyComment = new TextView(getActivity().getApplicationContext());
 			            postedbyComment.setTextColor(Color.GRAY);
-			            postedbyComment.setPadding(0,0,0,1);
+			            postedbyComment.setPadding(0,0,0,5);
 			            ratingComment.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
 			            
 			            //done to add all the parts of a persons name
@@ -212,35 +221,17 @@ public class CommentsFragment extends Fragment{
 			            
 			             //add the title and date to the container
 			            //ratingTitleContentContainer.addView(ratingTitle);
-			            ratingTitleContentContainer.addView(postedbyComment);
+			           
 			            //ratingTitleContentContainer.addView(vendorRating);
 			            ratingTitleContentContainer.addView(ratingComment);
+			            ratingTitleContentContainer.addView(postedbyComment);
+			            ratingTitleContentContainer.addView(ratingDate);
 			            ratingTitleContainer.addView(profilePic);
 			            ratingTitleContainer.addView(ratingTitleContentContainer);
 			            //Add the title container to the entire container
 			            outsideContainer.addView(ratingTitleContainer);
 			            
-			            //Add the x icon only if the user logged in is the one who made the comment
-			            //if(((VendorDetailsHandler) getActivity()).getUserId() == vendorRatingList.get(i).getUserId() || ((VendorDetailsHandler) getActivity()).getUserId() == 61)
-			            //{
-//			            	imageList.add(new ImageView(getActivity().getApplicationContext()));
-//							LinearLayout.LayoutParams tableXParams = new LinearLayout.LayoutParams((int) (screenWidth * 0.08), (int) (screenWidth * 0.08), Gravity.RIGHT);
-//							tableXParams.gravity = Gravity.RIGHT;
-//							imageList.get(imageList.size()-1).setLayoutParams(tableXParams);
-//							imageList.get(imageList.size()-1).setPadding(0, 0, 10, 0);
-//							imageList.get(imageList.size()-1).setImageResource(R.drawable.icon_x);
-//							imageList.get(imageList.size()-1).setTag(vendorRatingList.get(i).getRatingId());
-//							outsideContainer.addView(imageList.get(imageList.size()-1));
-//							
-//							imageList.get(i).setOnClickListener(new OnClickListener() {
-//								public void onClick(View v) {
-//									System.out.println("CLICKED " + (Integer) v.getTag());
-//									DeleteRatingTask task = new DeleteRatingTask();
-//								    task.execute(new String[] { "http://pursefitness.com/hotdog_app/delete_rating.php?ratingid=" + (Integer) v.getTag() });
-//								}
-//							 });
-//							
-//			            }
+			          
 			            
 			            //add to the page
 						vendorListLayout.addView(outsideContainer);
@@ -289,7 +280,7 @@ public class CommentsFragment extends Fragment{
 		vendorRatingList.clear();
 		//Get info from server and update ratings list
 		DownloadJSON task = new DownloadJSON();
-	    task.execute(new String[] { "http://pursefitness.com/opendata/get_comments.php?location_id=1" });
+	    task.execute(new String[] { "http://pursefitness.com/opendata/get_comments.php?location_id=" + locationId });
 	}
 	
 	@Override
@@ -303,6 +294,17 @@ public class CommentsFragment extends Fragment{
 	public void onPause()
 	{
 		super.onPause();
+	}
+
+	@Override
+	public void onRefresh() {
+		vendorListLayout.removeAllViews();
+		vendorRatingList.clear();
+		//Get info from server and update ratings list
+		DownloadJSON task = new DownloadJSON();
+	    task.execute(new String[] { "http://pursefitness.com/opendata/get_comments.php?location_id=" +  locationId });
+	
+		
 	}
 	
 }

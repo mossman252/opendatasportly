@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.team.opendata"
     android:versionCode="1"
@@ -7,8 +6,8 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="21" />
-
-    <!-- Required OpenGL ES 2.0. for Maps V2 -->
+    
+     <!-- Required OpenGL ES 2.0. for Maps V2 -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -17,26 +16,29 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
-
+    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+ 
     <!-- Required to show current location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo_new"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Example" >
         <activity
             android:name=".ItemListActivity"
             android:label="@string/app_name" >
-           
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ItemDetailActivity"
@@ -50,61 +52,27 @@
             android:name=".LocationActivity"
             android:label="@string/title_activity_location" >
         </activity>
-        <activity
-            android:name=".LoginActivity"
+	
+         <activity
+            android:name="com.team.opendata.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+             </intent-filter>
         </activity>
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity
-            android:name=".WriteTagActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_write_tag"
-            android:theme="@style/FullscreenTheme" >
-        </activity>
-        <activity
-            android:name=".NFCListenerActivity"
-            android:label="@string/title_activity_nfclistener" >
-        </activity>
-        <activity
-            android:name=".NFCActivity"
-            android:label="@string/title_activity_nfc" >
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <data android:mimeType="application/vnd.location.info" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
+        <meta-data android:value="@string/app_id" android:name="com.facebook.sdk.ApplicationId"/>
         <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id" />
-       
+        	android:name="com.google.android.gms.version"
+        	android:value="@integer/google_play_services_version" />
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCww6neDJObEM96PpqgR7bjruWPH262gt4" />
-	
-	<activity
-            android:name=".PostCommentActivity"
-            android:label="@string/app_name" >
-        </activity>
-	
-	 <activity
-            android:name=".VendorDetailsHandler"
-            android:label="@string/title_activity_tabbed_location_details" >
-        </activity>
+     		android:name="com.google.android.maps.v2.API_KEY"
+     		android:value="AIzaSyCww6neDJObEM96PpqgR7bjruWPH262gt4" />
     </application>
 
 </manifest>

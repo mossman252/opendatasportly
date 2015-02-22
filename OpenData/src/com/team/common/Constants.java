@@ -9,6 +9,13 @@ public class Constants {
 	public final static String MONT_BOLD = "fonts/Montserrat-Bold.otf";
 	public final static String MONT_BLACK = "fonts/Montserrat-Black.otf";
 	
+	public static final String LOCATION_ID = "location_id";
+
+	
+	public class MimeType {
+		public static final String NFC_DEMO = "application/vnd.location.info";
+	}
+	
 	//shared pref
 	public static final String SHARED_PREFERENCE_NAME = "UserInfo";
 	public static final String USER_ID = "USER_ID";
