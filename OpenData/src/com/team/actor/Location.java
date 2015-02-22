@@ -15,7 +15,26 @@ public class Location {
 	private String website;
 	private String type; 
 	private float distance;
+	private int count;
 
+	public Location(int locationId, String category, String unit, String address, String city,
+			String postalCode, String phone, String name,  Double lat, Double longi, String website, String type, int count)
+	{
+		this.locationId = locationId;
+		this.category = category;
+		this.unit = unit;
+		this.address = address;
+		this.name = name;
+		this.city = city;
+		this.postalCode = postalCode;
+		this.lat = lat;
+		this.longi = longi;
+		this.website = website;
+		this.type = type;
+		this.phone = phone;
+		this.count = count;
+	}
+	
 	public Location(int locationId, String category, String unit, String address, String city,
 			String postalCode, String phone, String name,  Double lat, Double longi, String website, String type)
 	{
@@ -32,8 +51,18 @@ public class Location {
 		this.type = type;
 		this.phone = phone;
 	}
+
 	
-	
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+
+
 	public int getLocationId() {
 		return locationId;
 	}

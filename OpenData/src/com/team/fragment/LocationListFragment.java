@@ -48,7 +48,7 @@ public class LocationListFragment extends Fragment {
 	private LocationManager locationManager;
 	private String provider;
 	private Location myLocation;
-	
+		
 	private String mFilter;
 	private ArrayList<com.team.actor.Location> mLocList;
 	
@@ -123,7 +123,11 @@ public class LocationListFragment extends Fragment {
 		}
 		
 		public int getCount() {
-			return  mLocList.size();
+			if(mLocList == null) {
+				return 0;
+			} else {
+				return  mLocList.size();
+			}
 		}
 
 		public Object getItem(int position) {
@@ -144,12 +148,17 @@ public class LocationListFragment extends Fragment {
 			//Textview for workout name and body part
 			TextView name = (TextView)view.findViewById(R.id.name); 
 	        TextView timeTaken = (TextView)view.findViewById(R.id.distance);
-	        
+			TextView count = (TextView)view.findViewById(R.id.count); 
+
 	        // Setting all values in listview
 	        name.setText("  " + mLocList.get(position).getName()); 
-	        
-	        if(!(myLocation == null)){
-	        	timeTaken.setText("Distance: " + (String.format("%.2f", (mLocList.get(position)).getDistance()/1000))  + "km");
+	        if(mLocList.get(position).getCount() > 0) {
+	        	count.setText("  " + mLocList.get(position).getCount() + " Checked In"); 
+	        } else {
+	        	count.setText("  No one Checked In "); 
+	        }
+	        if(!(myLocation == null)) {
+	        	timeTaken.setText((String.format("%.2f", (mLocList.get(position)).getDistance()/1000))  + "km");
 	        }
 	        
 	        view.setTag(mLocList.get(position).getLocationId());
@@ -204,16 +213,15 @@ public class LocationListFragment extends Fragment {
 								json_data.getDouble("LATITUDE"), 
 								json_data.getDouble("LONGITUDE"), 
 								json_data.getString("WEBSITE"), 
-								json_data.getString("LM_TYPE")));
+								json_data.getString("LM_TYPE"),
+								json_data.getInt("checkedin")));
 				}
 				
 			
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			finally{
-				
+			} finally {
 				((LocationActivity)getActivity()).setLocList(mLocList);
 				init();
 			}
@@ -225,22 +233,29 @@ public class LocationListFragment extends Fragment {
 		
 		Location vendorLoc = new Location("");
 
-		for (int i=0; i < mLocList.size(); i++) {
-			vendorLoc.setLatitude(mLocList.get(i).getLat());
-			vendorLoc.setLatitude(mLocList.get(i).getLongi());
-			if(!(myLocation == null)){
-				float[] results= new float[3];
-				Location.distanceBetween(myLocation.getLatitude(), myLocation.getLongitude(), mLocList.get(i).getLat(), mLocList.get(i).getLongi(), results);
-				mLocList.get(i).setDistance(results[0]);
-				//vendorList.get(i).setDistance(vendorLoc.distanceTo(myLocation));
+		if(null != mLocList) {
+		
+			for (int i = 0; i < mLocList.size(); i++) {
+				vendorLoc.setLatitude(mLocList.get(i).getLat());
+				vendorLoc.setLatitude(mLocList.get(i).getLongi());
+				if (!(myLocation == null)) {
+					float[] results = new float[3];
+					Location.distanceBetween(myLocation.getLatitude(),
+							myLocation.getLongitude(),
+							mLocList.get(i).getLat(), mLocList.get(i)
+									.getLongi(), results);
+					mLocList.get(i).setDistance(results[0]);
+					// vendorList.get(i).setDistance(vendorLoc.distanceTo(myLocation));
+				}
+			}
+
+			// only if the app knows where the user's location is
+			if (!(myLocation == null)) {
+				Comparator<com.team.actor.Location> comparator = new MyComparator<com.team.actor.Location>();
+				Collections.sort(mLocList, comparator);
 			}
 		}
 		
-		//only if the app knows where the user's location is
-		if(!(myLocation == null)) {
-			Comparator<com.team.actor.Location> comparator = new MyComparator<com.team.actor.Location>();
-			Collections.sort(mLocList, comparator);
-	    }
 		createList();
 	}
 	

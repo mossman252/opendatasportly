@@ -16,6 +16,10 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Criteria;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,11 +46,13 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 	private MapFragment fragment;
 	private GoogleMap map;
 	
-	static final LatLng Toronto = new LatLng(43.65, -79.38);
+	static LatLng myLatLng = new LatLng(43.65, -79.38);
+	private android.location.Location myLocation;
     
     private String mFilter;
 	private ArrayList<com.team.actor.Location> mLocList;
-
+	private LocationManager locationManager;
+	private String provider;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +73,20 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 		getActivity().setProgressBarIndeterminateVisibility(true);
 		((LocationActivity) getActivity()).setTitle("Map");
 		
+		// Get the location manager
+		locationManager = (LocationManager) getActivity().getSystemService(
+						Context.LOCATION_SERVICE);
+
+		// Define the criteria how to select the locatioin provider -> use
+		Criteria criteria = new Criteria();
+		provider = locationManager.getBestProvider(criteria, false);
+
+		myLocation = locationManager.getLastKnownLocation(provider);
+		
+		if(null != myLocation) {
+			myLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+		}
+		
         mFilter = ((LocationActivity)getActivity()).getFilter();
         
         if(((LocationActivity)getActivity()).getLocList() != null) {
@@ -84,6 +104,8 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 	        		
 		    task.execute(new String[] { url });
 		}
+        
+        
 	    
 	}
 
@@ -131,7 +153,8 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 								json_data.getDouble("LATITUDE"), 
 								json_data.getDouble("LONGITUDE"), 
 								json_data.getString("WEBSITE"), 
-								json_data.getString("LM_TYPE")));
+								json_data.getString("LM_TYPE"),
+								json_data.getInt("checkedin")));
 				}
 			
 			} catch (JSONException e) {
@@ -151,13 +174,16 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
     	while(map == null){}
     	configureMap(map);
     	
+    	if(null == mLocList)
+    		return;
+    	
     	for(int i = 0; i < mLocList.size(); i++)
 		{
 			 Marker marker = map.addMarker(new MarkerOptions()
       			.position(new LatLng(mLocList.get(i).getLat(), mLocList.get(i).getLongi())));
       			
       				//marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_dog_stand));
-      				marker.setTitle(mLocList.get(i).getName());
+      				marker.setTitle(mLocList.get(i).getLocationId() + " - " + mLocList.get(i).getName());
       				marker.setSnippet("Address: " + mLocList.get(i).getAddress());
       				marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
 		}
@@ -170,10 +196,11 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 	
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-//			Intent intent = new Intent(getActivity().getApplicationContext(), VendorDetailsHandler.class);
-//			intent.putExtra("VENDOR_ID", marker.getTitle().substring(12, marker.getTitle().length()));
-//			startActivity(intent);
-//			getActivity().overridePendingTransition(R.anim.translate_left_offscreen, R.anim.translate_right_onscreen);
+		Intent intent = new Intent(getActivity().getApplicationContext(), VendorDetailsHandler.class);
+		String[] words = marker.getTitle().split(" ");
+		intent.putExtra("LOCATION_ID", words[0]);
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.translate_left_offscreen, R.anim.translate_right_onscreen);
 	}
 	
 	@Override
@@ -191,7 +218,7 @@ public class LocationMapFragment extends Fragment implements OnMapLongClickListe
 	        map = fragment.getMap();
 	    }
 	    //Move the camera position into toronto
-	  	CameraPosition cameraPosition = new CameraPosition.Builder().target(Toronto).zoom(13).build();
+	  	CameraPosition cameraPosition = new CameraPosition.Builder().target(myLatLng).zoom(13).build();
 	  	map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 	  	map.setOnMapLongClickListener(this);
 	  	map.setOnInfoWindowClickListener(this);

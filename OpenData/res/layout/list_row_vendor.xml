@@ -3,9 +3,9 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingTop="5dip" 
+    android:paddingTop="10dip" 
     android:paddingLeft="1dip"
-    android:paddingBottom="5dip"
+    android:paddingBottom="10dip"
     android:layout_margin="10dip">
  
     <!--  ListRow Left sied Thumbnail image -->
@@ -14,13 +14,13 @@
         android:layout_height="wrap_content"
         android:padding="2dip"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="5dip">
+        android:layout_marginRight="1dip">
  
         <ImageView
             android:id="@+id/location_thumb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/marker"
             />
  
     </LinearLayout>
@@ -31,13 +31,14 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:textSize="@dimen/fonts_small"
+        android:textSize="@dimen/fonts_normal"
+        android:textStyle="bold"
+        android:maxLines="1"
         />
- 
-   
-    <TextView
-        android:id="@+id/distance"
-        android:layout_width="fill_parent"
+    
+     <TextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
         android:textColor="@color/subblack"
@@ -45,14 +46,19 @@
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
          />
+ 
+   
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:textColor="@color/subblack"
+        android:textSize="@dimen/fonts_small"
+        android:layout_marginTop="1dip"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="7dip"
+         />
 
-    <ImageView
-            android:id="@+id/arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dip"
-            />
  
 </RelativeLayout>
